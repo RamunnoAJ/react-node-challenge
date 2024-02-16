@@ -1,1 +1,1 @@
-module.exports = class AbstractControllerError extends Error {}
+export class AbstractControllerError extends Error {}

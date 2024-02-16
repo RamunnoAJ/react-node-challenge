@@ -1,6 +1,6 @@
-const AbstractControllerError = require('./error/abstractControllerError')
+import { AbstractControllerError } from './error/abstractControllerError'
 
-module.exports = class AbstractController {
+export class AbstractController {
   constructor() {
     if (this.constructor === AbstractController) {
       throw new AbstractControllerError()

@@ -1,5 +1,5 @@
-const AbstractController = require('../abstractController')
-const AbstractControllerError = require('../error/abstractControllerError')
+import { AbstractController } from '../abstractController'
+import { AbstractControllerError } from '../error/abstractControllerError'
 
 test("You shouldn't be able to create a new instance of AbstractController directly", () => {
   try {

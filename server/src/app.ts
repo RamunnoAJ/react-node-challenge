@@ -12,12 +12,13 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-const container = configureDI()
-app.use(container.resolve('Session'))
+const container: any = configureDI()
+
+app.use(container.get('session'))
 
 initUserModule(app, container)
 
-const userController = container.resolve('UserController')
+const userController = container.get('UserController')
 app.get('/', userController.getAll.bind(userController))
 app.get('/:id', userController.getByID.bind(userController))
 

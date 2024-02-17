@@ -4,7 +4,7 @@ import { UserRepository } from './repository/json/userRepository'
 import { UserService } from './service/userService'
 
 function init(app: Application, container: any) {
-  const controller = container.resolve('UserController')
+  const controller = container.get('UserController')
   controller.configureRoutes(app)
 }
 

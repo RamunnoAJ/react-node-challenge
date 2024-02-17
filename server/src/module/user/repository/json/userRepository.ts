@@ -4,15 +4,15 @@ import { User } from '../../entity/user'
 
 export class UserRepository extends AbstractUserRepository {
   dbFilePath: string
-  fileSystem: string
-  constructor(fileSystem: string, dbFilePath: string) {
+  fileSystem: any
+  constructor(fileSystem: any, dbFilePath: string) {
     super()
     this.fileSystem = fileSystem
     this.dbFilePath = dbFilePath
   }
 
   async getByID(id: string): Promise<User> {
-    const users = await this.getAll()
+    const users = this.getData()
 
     const user = users.find((tmpUser: User) => tmpUser.id === id)
 
@@ -24,7 +24,17 @@ export class UserRepository extends AbstractUserRepository {
   }
 
   async getAll(): Promise<User[]> {
-    const users = await this.getAll()
-    return users.map((user: User) => new User(user))
+    return this.getData().map((user: User) => new User(user))
+  }
+
+  getData(): User[] {
+    const content = this.fileSystem.readFileSync(this.dbFilePath, 'utf8')
+    let paresedContent
+    try {
+      paresedContent = JSON.parse(content)
+    } catch (e) {
+      paresedContent = []
+    }
+    return paresedContent
   }
 }

@@ -1,4 +1,4 @@
-import { DIContainer, factory, get, object } from 'rsdi'
+import { createContainer, asFunction, asValue, asClass } from 'awilix'
 import fs from 'fs'
 import session from 'express-session'
 
@@ -26,26 +26,30 @@ function configureSession() {
 }
 
 function addCommonDefinitions(container: any) {
-  container.addDefinitions({
-    fs,
-    JSONDatabase: factory(configureMainJSONDatabase),
-    Session: factory(configureSession),
+  container.register({
+    fs: asValue(fs),
+    JSONDatabase: asFunction(configureMainJSONDatabase),
+    Session: asFunction(configureSession),
   })
 }
 
 function addUserModuleDefinitions(container: any) {
-  container.addDefinitions({
-    UserController: object(UserController).construct(get('UserService')),
-    UserService: object(UserService).construct(container.get('UserRepository')),
-    UserRepository: object(UserRepository).construct(
-      get('fs'),
-      get('JSONDatabase'),
-    ),
+  container.register({
+    UserRepository: asClass(UserRepository).inject(() => ({
+      fs: container.resolve('fs'),
+      JSONDatabase: container.resolve('JSONDatabase'),
+    })),
+    UserService: asClass(UserService).inject(() => ({
+      userRepository: container.resolve('UserRepository'),
+    })),
+    UserController: asClass(UserController).inject(() => ({
+      userService: container.resolve('UserService'),
+    })),
   })
 }
 
 export function configureDI() {
-  const container = new DIContainer()
+  const container = createContainer()
   addCommonDefinitions(container)
   addUserModuleDefinitions(container)
 

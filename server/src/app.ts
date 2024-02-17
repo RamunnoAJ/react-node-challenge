@@ -13,11 +13,11 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 const container = configureDI()
-app.use(container.get('Session'))
+app.use(container.resolve('Session'))
 
 initUserModule(app, container)
 
-const userController = container.get('UserController')
+const userController = container.resolve('UserController')
 app.get('/', userController.getAll.bind(userController))
 app.get('/:id', userController.getByID.bind(userController))
 

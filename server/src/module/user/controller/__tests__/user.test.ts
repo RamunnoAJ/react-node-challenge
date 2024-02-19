@@ -42,8 +42,20 @@ describe('UserController', () => {
 
       userController.configureRoutes(app)
 
-      expect(app.get).toHaveBeenCalledWith('/users', expect.any(Function))
-      expect(app.get).toHaveBeenCalledWith('/users/:id', expect.any(Function))
+      expect(app.get).toHaveBeenCalledWith(
+        '/users',
+        expect.any(Function),
+        expect.any(Function),
+      )
+      expect(app.get).toHaveBeenCalledWith(
+        '/users/:id',
+        expect.any(Function),
+        expect.any(Function),
+      )
+      expect(app.post).toHaveBeenCalledWith(
+        '/users/login',
+        expect.any(Function),
+      )
     })
   })
 

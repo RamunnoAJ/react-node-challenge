@@ -1,4 +1,5 @@
-import { UserController } from '../../module'
+import { UserController, UserService } from '../../module'
+import { InvalidUserOrPasswordError } from '../error/invalidUserOrPassword'
 import { UserIdNotDefinedError } from '../error/userIdNotDefinedError'
 
 const mockUserService: any = {
@@ -15,6 +16,12 @@ const mockResponse = {
   session: { errors: [] },
 } as any
 
+class MockUserService extends UserService {
+  async generateToken(user: any): Promise<string> {
+    return 'mock_token'
+  }
+}
+
 describe('UserController', () => {
   let userController: UserController
 
@@ -30,6 +37,7 @@ describe('UserController', () => {
     it('should configure routes for getAll and getByID', () => {
       const app = {
         get: jest.fn(),
+        post: jest.fn(),
       } as any
 
       userController.configureRoutes(app)
@@ -83,6 +91,50 @@ describe('UserController', () => {
       expect(mockUserService.getByID).not.toHaveBeenCalled()
       expect(mockResponse.send).not.toHaveBeenCalled()
       expect(mockResponse.session.errors).toEqual([])
+    })
+  })
+
+  describe('login', () => {
+    let userController: UserController
+    let mockRequest: any
+    let mockResponse: any
+
+    beforeEach(() => {
+      const mockUserRepository = {
+        getAll: jest.fn(),
+        getByID: jest.fn(),
+        generateToken: jest.fn(),
+      }
+      const mockUserService = new MockUserService(mockUserRepository)
+      userController = new UserController(mockUserService)
+
+      mockRequest = {
+        body: { username: 'test_user', password: 'test_password' },
+      }
+
+      mockResponse = {
+        send: jest.fn(),
+      }
+    })
+
+    it('should return a token when valid credentials are provided', async () => {
+      userController.userService.getAll = jest
+        .fn()
+        .mockResolvedValue([
+          { username: 'test_user', password: 'test_password' },
+        ])
+
+      await userController.login(mockRequest as any, mockResponse as any)
+
+      expect(mockResponse.send).toHaveBeenCalledWith({ token: 'mock_token' })
+    })
+
+    it('should throw an error when invalid credentials are provided', async () => {
+      userController.userService.getAll = jest.fn().mockResolvedValue([])
+
+      await expect(
+        userController.login(mockRequest, mockResponse),
+      ).rejects.toThrow(InvalidUserOrPasswordError)
     })
   })
 })

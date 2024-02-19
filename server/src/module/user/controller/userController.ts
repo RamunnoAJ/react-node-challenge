@@ -8,7 +8,7 @@ export class UserController extends AbstractController {
   ROUTE_BASE: string
   userService: UserService
 
-  constructor(userService: any) {
+  constructor(userService: UserService) {
     super()
     this.ROUTE_BASE = '/users'
     this.userService = userService
@@ -17,8 +17,8 @@ export class UserController extends AbstractController {
   configureRoutes(app: Application) {
     const ROUTE = this.ROUTE_BASE
 
-    app.get(`${ROUTE}`, this.getAll.bind(this))
-    app.get(`${ROUTE}/:id`, this.getByID.bind(this))
+    app.get(`${ROUTE}`, this.verify.bind(this), this.getAll.bind(this))
+    app.get(`${ROUTE}/:id`, this.verify.bind(this), this.getByID.bind(this))
     app.post(`${ROUTE}/login`, this.login.bind(this))
   }
 
@@ -61,5 +61,26 @@ export class UserController extends AbstractController {
     const token = await this.userService.generateToken(user)
 
     res.send({ token })
+  }
+
+  async verify(req: any, res: Response, next: Function) {
+    const authHeader = req.headers.authorization
+    if (!authHeader) {
+      return res.status(401).send()
+    }
+
+    const token = authHeader.split(' ')[1]
+    this.userService.userRepository.jwt.verify(
+      token,
+      process.env.JWT_SECRET,
+      (err: any, user: any) => {
+        if (err) {
+          return res.status(403).json('Token is not valid!')
+        }
+
+        req.use = user
+        next()
+      },
+    )
   }
 }

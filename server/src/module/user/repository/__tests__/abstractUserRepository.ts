@@ -1,22 +1,20 @@
 import { AbstractUserRepository } from '../abstractUserRepository'
 import { AbstractUserRepositoryError } from '../error/abstractUserRepositoryError'
 
-test('Cannot initialize the repository of abstract class user', () => {
+test('Cannot instanciate the repository of abstract class user', () => {
   let repoInstance
-
   try {
     repoInstance = new AbstractUserRepository()
-  } catch (error) {
-    expect(error).toBeInstanceOf(AbstractUserRepositoryError)
+  } catch (e) {
+    expect(e).toBeInstanceOf(AbstractUserRepositoryError)
   } finally {
     expect(repoInstance).toBeUndefined()
   }
 })
 
-test('Can initialize the concrete repository that inherits from the abstract repository', () => {
+test('Can instanciate a concrete repository that inherits from abstract', () => {
   const ConcreteRepository = class extends AbstractUserRepository {}
-  const repoInstance = new ConcreteRepository()
-
-  expect(repoInstance).toBeInstanceOf(ConcreteRepository)
-  expect(repoInstance).toBeInstanceOf(AbstractUserRepository)
+  const repositoryInstance = new ConcreteRepository()
+  expect(repositoryInstance).toBeInstanceOf(ConcreteRepository)
+  expect(repositoryInstance).toBeInstanceOf(AbstractUserRepository)
 })

@@ -1,5 +1,6 @@
 import { User } from '../entity/user'
 import { AbstractUserRepositoryError } from './error/abstractUserRepositoryError'
+import { UserIdNotDefinedError } from './error/userIdNotDefinedError'
 import { UserNotFoundError } from './error/userNotFoundError'
 
 export class AbstractUserRepository {
@@ -13,6 +14,7 @@ export class AbstractUserRepository {
 
   async getByID(id: string): Promise<User> {
     if (!id) {
+      throw new UserIdNotDefinedError()
     }
 
     const user = await this.getAll().then(users => {

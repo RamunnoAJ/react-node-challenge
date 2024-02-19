@@ -6,9 +6,11 @@ import { UserService } from '../userService'
 const mockUserRepository = {
   getAll: jest.fn(),
   getByID: jest.fn(),
+  async generateToken(user: User): Promise<any> {
+    return 'mock_token'
+  },
 }
 
-// Mock User entity for testing
 class MockUser extends User {
   constructor(id: string) {
     super({
@@ -23,9 +25,17 @@ class MockUser extends User {
 
 describe('UserService', () => {
   let userService: UserService
+  let mockUser: User
 
   beforeEach(() => {
     userService = new UserService(mockUserRepository)
+
+    mockUser = {
+      id: '1',
+      username: 'username',
+      email: 'email',
+      password: 'password',
+    }
   })
 
   afterEach(() => {
@@ -62,5 +72,11 @@ describe('UserService', () => {
 
     await expect(userService.getByID('1')).rejects.toThrow(UserNotDefinedError)
     expect(mockUserRepository.getByID).toHaveBeenCalledWith('1')
+  })
+
+  it('should return a token when valid user is provided', async () => {
+    const token = await userService.generateToken(mockUser)
+
+    expect(token).toEqual('mock_token')
   })
 })

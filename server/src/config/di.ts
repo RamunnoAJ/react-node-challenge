@@ -1,6 +1,7 @@
 import DIContainer, { object, factory, use } from 'rsdi'
 import fs from 'fs'
 import session from 'express-session'
+import jwt from 'jsonwebtoken'
 
 import {
   UserController,
@@ -30,6 +31,7 @@ function addCommonDefinitions(container: DIContainer) {
     fs: factory(() => fs),
     UsersJSONDatabase: factory(() => configureMainJSONDatabase()),
     session: factory(() => configureSession()),
+    jwt: factory(() => jwt),
   })
 }
 
@@ -38,6 +40,7 @@ function addUserDefinitions(container: DIContainer) {
     UserRepository: object(UserRepository).construct(
       use('fs'),
       use('UsersJSONDatabase'),
+      use('jwt'),
     ),
     UserService: object(UserService).construct(use('UserRepository')),
     UserController: object(UserController).construct(use('UserService')),

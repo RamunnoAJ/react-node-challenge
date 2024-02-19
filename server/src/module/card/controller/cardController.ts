@@ -16,20 +16,16 @@ export class CardController extends AbstractController {
   configureRoutes(app: Application) {
     const ROUTE = this.ROUTE_BASE
 
-    app.get(
-      `${ROUTE}/:userId`,
-      this.verify.bind(this),
-      this.getByUser.bind(this),
-    )
+    app.get(`${ROUTE}/:id`, this.verify.bind(this), this.getByUser.bind(this))
   }
 
   async getByUser(req: Request, res: Response) {
-    const { userId } = req.params
-    if (!userId) {
+    const { id } = req.params
+    if (!id) {
       throw new CardUserIdNotDefinedError()
     }
 
-    const cards = await this.cardService.getCardsByUser(userId)
+    const cards = await this.cardService.getCardsByUser(id)
     const { errors } = req.session
 
     res.send({ cards, errors })

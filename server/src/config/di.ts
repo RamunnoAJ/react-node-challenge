@@ -8,9 +8,18 @@ import {
   UserRepository,
   UserService,
 } from '../module/user/module'
+import {
+  CardController,
+  CardRepository,
+  CardService,
+} from '../module/card/module'
 
-function configureMainJSONDatabase() {
+function configureUsersJSONDatabase() {
   return process.env.USERS_JSON_DB_PATH
+}
+
+function configureCardsJSONDatabase() {
+  return process.env.CARDS_JSON_DB_PATH
 }
 
 function configureSession() {
@@ -29,7 +38,8 @@ function configureSession() {
 function addCommonDefinitions(container: DIContainer) {
   container.add({
     fs: factory(() => fs),
-    UsersJSONDatabase: factory(() => configureMainJSONDatabase()),
+    UsersJSONDatabase: factory(() => configureUsersJSONDatabase()),
+    CardsJSONDatabase: factory(() => configureCardsJSONDatabase()),
     session: factory(() => configureSession()),
     jwt: factory(() => jwt),
   })
@@ -47,10 +57,23 @@ function addUserDefinitions(container: DIContainer) {
   })
 }
 
+function addCardDefinitions(container: DIContainer) {
+  container.add({
+    CardRepository: object(CardRepository).construct(
+      use('fs'),
+      use('CardsJSONDatabase'),
+      use('jwt'),
+    ),
+    CardService: object(CardService).construct(use('CardRepository')),
+    CardController: object(CardController).construct(use('CardService')),
+  })
+}
+
 export function configureDI() {
   const container: DIContainer = new DIContainer()
   addCommonDefinitions(container)
   addUserDefinitions(container)
+  addCardDefinitions(container)
 
   return container
 }

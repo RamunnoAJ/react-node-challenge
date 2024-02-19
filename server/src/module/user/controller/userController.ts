@@ -9,14 +9,14 @@ export class UserController extends AbstractController {
 
   constructor(userService: any) {
     super()
-    this.ROUTE_BASE = '/user'
+    this.ROUTE_BASE = '/users'
     this.userService = userService
   }
 
   configureRoutes(app: Application) {
     const ROUTE = this.ROUTE_BASE
 
-    app.get(`${ROUTE}/:id`, this.getAll.bind(this))
+    app.get(`${ROUTE}`, this.getAll.bind(this))
     app.get(`${ROUTE}/:id`, this.getByID.bind(this))
   }
 

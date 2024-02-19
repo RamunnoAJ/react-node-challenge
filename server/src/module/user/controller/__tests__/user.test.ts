@@ -1,50 +1,88 @@
-import { UserController } from '../userController'
+import { UserController } from '../../module'
 import { UserIdNotDefinedError } from '../error/userIdNotDefinedError'
-import { Request, Response } from 'express'
 
-const serviceMock = {
+const mockUserService: any = {
   getAll: jest.fn(),
   getByID: jest.fn(),
 }
 
-const controller = new UserController(serviceMock)
+const mockRequest = {
+  session: { errors: [] },
+} as any
+const mockResponse = {
+  send: jest.fn(),
+  status: jest.fn().mockReturnThis(),
+  session: { errors: [] },
+} as any
 
-test('Should get all users', async () => {
-  const sendMock = jest.fn()
+describe('UserController', () => {
+  let userController: UserController
 
-  const req = { session: { errors: [] } } as Request
-  const res = { send: sendMock } as unknown as Response
-
-  await controller.getAll(req, res)
-
-  expect(sendMock).toHaveBeenCalledTimes(1)
-  expect(sendMock).toHaveBeenCalledWith({ users: [] })
-})
-
-test('Should get the user', async () => {
-  const MOCK_ID = '1'
-  serviceMock.getByID.mockImplementation(() => {
-    throw Error('example')
+  beforeEach(() => {
+    userController = new UserController(mockUserService)
   })
 
-  const redirectMock = jest.fn()
-  const req = {
-    params: { id: MOCK_ID },
-    session: { errors: [] },
-  } as unknown as Request
-  const res = { redirect: redirectMock } as unknown as Response
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
 
-  await controller.getByID(req, res)
+  describe('configureRoutes', () => {
+    it('should configure routes for getAll and getByID', () => {
+      const app = {
+        get: jest.fn(),
+      } as any
 
-  expect(redirectMock).toHaveBeenCalledTimes(1)
-  expect(req.session.errors).not.toEqual([])
-})
+      userController.configureRoutes(app)
 
-test('Should throw an error when user id is not defined', async () => {
-  expect(
-    controller.getByID(
-      { params: {} } as unknown as Request,
-      {} as unknown as Response,
-    ),
-  ).rejects.toThrow(UserIdNotDefinedError)
+      expect(app.get).toHaveBeenCalledWith('/users', expect.any(Function))
+      expect(app.get).toHaveBeenCalledWith('/users/:id', expect.any(Function))
+    })
+  })
+
+  describe('getAll', () => {
+    it('should get all users and send response', async () => {
+      const mockUsers = [
+        { id: 1, username: 'user1' },
+        { id: 2, username: 'user2' },
+      ]
+      mockUserService.getAll.mockResolvedValueOnce(mockUsers)
+
+      await userController.getAll(mockRequest, mockResponse)
+
+      expect(mockUserService.getAll).toHaveBeenCalled()
+      expect(mockResponse.send).toHaveBeenCalledWith({
+        users: mockUsers,
+        errors: [],
+      })
+      expect(mockResponse.session.errors).toEqual([])
+    })
+  })
+
+  describe('getByID', () => {
+    it('should get user by ID and send response', async () => {
+      const mockUser = { id: 1, username: 'user1' }
+      mockUserService.getByID.mockResolvedValueOnce(mockUser)
+      const mockRequestWithParams = { ...mockRequest, params: { id: '1' } }
+
+      await userController.getByID(mockRequestWithParams, mockResponse)
+
+      expect(mockUserService.getByID).toHaveBeenCalledWith('1')
+      expect(mockResponse.send).toHaveBeenCalledWith({
+        user: mockUser,
+        errors: [],
+      })
+      expect(mockResponse.session.errors).toEqual([])
+    })
+
+    it('should throw UserIdNotDefinedError if ID is not provided', async () => {
+      const mockRequestWithParams = { ...mockRequest, params: {} }
+
+      await expect(
+        userController.getByID(mockRequestWithParams, mockResponse),
+      ).rejects.toThrow(UserIdNotDefinedError)
+      expect(mockUserService.getByID).not.toHaveBeenCalled()
+      expect(mockResponse.send).not.toHaveBeenCalled()
+      expect(mockResponse.session.errors).toEqual([])
+    })
+  })
 })

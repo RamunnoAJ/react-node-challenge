@@ -27,4 +27,14 @@ export class UserService {
 
     return user
   }
+
+  async generateToken(user: User) {
+    if (!user) {
+      throw new UserNotDefinedError()
+    }
+
+    const token = await this.userRepository.generateToken(user)
+
+    return token
+  }
 }

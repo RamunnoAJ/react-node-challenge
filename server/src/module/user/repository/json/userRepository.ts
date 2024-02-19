@@ -5,10 +5,12 @@ import { User } from '../../entity/user'
 export class UserRepository extends AbstractUserRepository {
   dbFilePath: string
   fileSystem: any
-  constructor(fileSystem: any, dbFilePath: string) {
+  jwt: any
+  constructor(fileSystem: any, dbFilePath: string, jwt: any) {
     super()
     this.fileSystem = fileSystem
     this.dbFilePath = dbFilePath
+    this.jwt = jwt
   }
 
   async getByID(id: string): Promise<User> {
@@ -25,6 +27,14 @@ export class UserRepository extends AbstractUserRepository {
 
   async getAll(): Promise<User[]> {
     return this.getData().map((user: User) => new User(user))
+  }
+
+  async generateToken(user: User) {
+    return await this.jwt.sign(
+      { id: user.id, username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: '24h' },
+    )
   }
 
   getData(): User[] {

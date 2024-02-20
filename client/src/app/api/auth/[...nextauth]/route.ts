@@ -14,31 +14,29 @@ export const authOptions = {
       async authorize(credentials) {
         if (credentials) {
           const { username, password } = credentials
-          const userOk = await fetch(`${API_URL}/users/login`, {
+          const data = await fetch(`${API_URL}/users/login`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({ username, password }),
           })
-          const userToken = await userOk.json()
-          await new Promise(resolve => setTimeout(resolve, 3000))
-          const { token } = userToken
-          console.log(token)
+          const userToken = await data.json()
 
-          await new Promise(resolve => setTimeout(resolve, 3000))
           const userData = await fetch(`${API_URL}/users`, {
             method: 'GET',
             headers: {
-              authorization: `Bearer ${token}`,
+              authorization: `Bearer ${userToken.token}`,
             },
           })
           const user = await userData.json()
+
           if (user.error) {
             return null
           }
-          if (user) {
-            return user
+
+          return {
+            ...userToken,
           }
         }
       },

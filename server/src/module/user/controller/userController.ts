@@ -63,7 +63,7 @@ export class UserController extends AbstractController {
 
     const token = await this.userService.generateToken(user)
 
-    res.send({ token })
+    res.send({ token, user })
   }
 
   async verify(req: any, res: Response, next: Function) {

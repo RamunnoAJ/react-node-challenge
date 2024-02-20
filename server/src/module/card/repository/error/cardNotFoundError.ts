@@ -1,1 +1,5 @@
-export class CardNotFoundError extends Error {}
+export class CardNotFoundError extends Error {
+  constructor(message = 'Card not found') {
+    super(message)
+  }
+}

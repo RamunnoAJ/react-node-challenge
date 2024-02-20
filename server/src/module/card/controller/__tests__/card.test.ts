@@ -22,13 +22,16 @@ describe('CardController', () => {
       const req = { params: {} }
       const res = { send: jest.fn() }
 
-      await expect(cardController.getByUser(req, res)).rejects.toThrow(
-        CardUserIdNotDefinedError,
-      )
+      await cardController.getByUser(req, res)
+
+      expect(res.send).toHaveBeenCalledWith({
+        cards: null,
+        errors: [CardUserIdNotDefinedError.name],
+      })
     })
 
     it('should send cards and errors if userId is defined', async () => {
-      const req = { params: { userId: 'testUserId' }, session: { errors: [] } }
+      const req = { params: { id: 'testUserId' }, session: { errors: [] } }
       const res = { send: jest.fn() }
       const mockCards = [
         { id: 1, name: 'Card 1' },

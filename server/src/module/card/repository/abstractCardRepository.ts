@@ -6,9 +6,7 @@ import { CardNotFoundError } from './error/cardNotFoundError'
 export class AbstractCardRepository {
   constructor() {
     if (new.target === AbstractCardRepository) {
-      throw new AbstractCardRepositoryError(
-        'Cannot initialize the repository of abstract class card',
-      )
+      throw new AbstractCardRepositoryError()
     }
   }
 

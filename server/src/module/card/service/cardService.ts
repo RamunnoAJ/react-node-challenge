@@ -14,15 +14,15 @@ export class CardService {
     return cards
   }
 
-  async getCardsByUser(userId: string): Promise<Card[]> {
+  async getCardsByUser(userId: string): Promise<Card[] | Error> {
     if (!userId) {
-      throw new CardUserIdNotDefinedError()
+      return new CardUserIdNotDefinedError()
     }
 
     const cards = await this.cardRepository.getCardsByUser(userId)
 
     if (!cards) {
-      throw new CardNotFoundError()
+      return new CardNotFoundError()
     }
 
     return cards

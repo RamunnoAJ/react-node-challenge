@@ -62,15 +62,19 @@ describe('UserService', () => {
     expect(mockUserRepository.getByID).toHaveBeenCalledWith('1')
   })
 
-  it('should throw UserIdNotDefinedError when ID is not provided', async () => {
-    await expect(userService.getByID('')).rejects.toThrow(UserIdNotDefinedError)
+  it('should resolve to UserIdNotDefinedError when ID is not provided', async () => {
+    await expect(userService.getByID('')).resolves.toEqual(
+      new UserIdNotDefinedError(),
+    )
     expect(mockUserRepository.getByID).not.toHaveBeenCalled()
   })
 
-  it('should throw UserNotDefinedError when user by ID not found', async () => {
+  it('should resolve to UserNotDefinedError when user by ID not found', async () => {
     mockUserRepository.getByID.mockResolvedValueOnce(null)
 
-    await expect(userService.getByID('1')).rejects.toThrow(UserNotDefinedError)
+    await expect(userService.getByID('1')).resolves.toEqual(
+      new UserNotDefinedError(),
+    )
     expect(mockUserRepository.getByID).toHaveBeenCalledWith('1')
   })
 

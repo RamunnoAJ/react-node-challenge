@@ -47,20 +47,24 @@ describe('CardService', () => {
       expect(result).toEqual(mockUserCards)
     })
 
-    it('should throw CardUserIdNotDefinedError when user ID is not provided', async () => {
+    it('should resolve to CardUserIdNotDefinedError when user ID is not provided', async () => {
       const userId: string = ''
 
-      await expect(cardService.getCardsByUser(userId)).rejects.toThrow(
-        CardUserIdNotDefinedError,
+      await cardService.getCardsByUser(userId)
+
+      await expect(cardService.getCardsByUser(userId)).resolves.toEqual(
+        new CardUserIdNotDefinedError(),
       )
     })
 
-    it('should throw CardNotFoundError when no cards found for user', async () => {
+    it('should resolve to CardNotFoundError when no cards found for user', async () => {
       const mockUserId = 'user123'
       mockCardRepository.getCardsByUser.mockResolvedValueOnce(null as any)
 
-      await expect(cardService.getCardsByUser(mockUserId)).rejects.toThrow(
-        CardNotFoundError,
+      await cardService.getCardsByUser(mockUserId)
+
+      await expect(cardService.getCardsByUser(mockUserId)).resolves.toEqual(
+        new CardNotFoundError(),
       )
     })
   })

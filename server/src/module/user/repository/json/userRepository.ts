@@ -19,7 +19,7 @@ export class UserRepository extends AbstractUserRepository {
     const user = users.find((tmpUser: User) => tmpUser.id === id)
 
     if (!user) {
-      throw new UserNotFoundError(`User with id ${id} not found`)
+      throw new UserNotFoundError()
     }
 
     return new User(user)

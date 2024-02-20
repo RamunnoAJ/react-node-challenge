@@ -22,7 +22,8 @@ export class CardController extends AbstractController {
   async getByUser(req: Request, res: Response) {
     const { id } = req.params
     if (!id) {
-      throw new CardUserIdNotDefinedError()
+      res.send({ cards: null, errors: [CardUserIdNotDefinedError.name] })
+      return
     }
 
     const cards = await this.cardService.getCardsByUser(id)

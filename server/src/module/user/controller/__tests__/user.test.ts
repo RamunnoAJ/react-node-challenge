@@ -97,11 +97,13 @@ describe('UserController', () => {
     it('should throw UserIdNotDefinedError if ID is not provided', async () => {
       const mockRequestWithParams = { ...mockRequest, params: {} }
 
-      await expect(
-        userController.getByID(mockRequestWithParams, mockResponse),
-      ).rejects.toThrow(UserIdNotDefinedError)
+      await userController.getByID(mockRequestWithParams, mockResponse)
+
       expect(mockUserService.getByID).not.toHaveBeenCalled()
-      expect(mockResponse.send).not.toHaveBeenCalled()
+      expect(mockResponse.send).toHaveBeenCalledWith({
+        user: null,
+        errors: [UserIdNotDefinedError.name],
+      })
       expect(mockResponse.session.errors).toEqual([])
     })
   })
@@ -144,9 +146,12 @@ describe('UserController', () => {
     it('should throw an error when invalid credentials are provided', async () => {
       userController.userService.getAll = jest.fn().mockResolvedValue([])
 
-      await expect(
-        userController.login(mockRequest, mockResponse),
-      ).rejects.toThrow(InvalidUserOrPasswordError)
+      await userController.login(mockRequest, mockResponse)
+
+      expect(mockResponse.send).toHaveBeenCalledWith({
+        token: null,
+        errors: ['Invalid username or password'],
+      })
     })
   })
 })

@@ -6,9 +6,7 @@ import { UserNotFoundError } from './error/userNotFoundError'
 export class AbstractUserRepository {
   constructor() {
     if (new.target === AbstractUserRepository) {
-      throw new AbstractUserRepositoryError(
-        'Cannot initialize the repository of abstract class user',
-      )
+      throw new AbstractUserRepositoryError()
     }
   }
 

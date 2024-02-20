@@ -33,7 +33,8 @@ export class UserController extends AbstractController {
   async getByID(req: Request, res: Response) {
     const { id } = req.params
     if (!id) {
-      throw new UserIdNotDefinedError()
+      res.send({ user: null, errors: [UserIdNotDefinedError.name] })
+      return
     }
 
     const user = await this.userService.getByID(id)
@@ -47,7 +48,8 @@ export class UserController extends AbstractController {
     const users = await this.userService.getAll()
     const { username, password } = req.body
     if (!username || !password) {
-      throw new UserIdNotDefinedError()
+      res.send({ token: null, errors: [InvalidUserOrPasswordError.name] })
+      return
     }
 
     const user = users.find(
@@ -55,7 +57,8 @@ export class UserController extends AbstractController {
     )
 
     if (!user) {
-      throw new InvalidUserOrPasswordError()
+      res.send({ token: null, errors: ['Invalid username or password'] })
+      return
     }
 
     const token = await this.userService.generateToken(user)

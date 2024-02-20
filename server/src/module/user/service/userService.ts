@@ -14,15 +14,15 @@ export class UserService {
     return users
   }
 
-  async getByID(id: string): Promise<User> {
+  async getByID(id: string): Promise<User | Error> {
     if (!id) {
-      throw new UserIdNotDefinedError()
+      return new UserIdNotDefinedError()
     }
 
     const user = await this.userRepository.getByID(id)
 
     if (!user) {
-      throw new UserNotDefinedError()
+      return new UserNotDefinedError()
     }
 
     return user
@@ -30,7 +30,7 @@ export class UserService {
 
   async generateToken(user: User) {
     if (!user) {
-      throw new UserNotDefinedError()
+      return new UserNotDefinedError()
     }
 
     const token = await this.userRepository.generateToken(user)

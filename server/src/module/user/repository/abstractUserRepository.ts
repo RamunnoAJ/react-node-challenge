@@ -10,9 +10,9 @@ export class AbstractUserRepository {
     }
   }
 
-  async getByID(id: string): Promise<User> {
+  async getByID(id: string): Promise<User | Error> {
     if (!id) {
-      throw new UserIdNotDefinedError()
+      return new UserIdNotDefinedError()
     }
 
     const user = await this.getAll().then(users => {
@@ -20,7 +20,7 @@ export class AbstractUserRepository {
     })
 
     if (!user) {
-      throw new UserNotFoundError()
+      return new UserNotFoundError()
     }
 
     return user

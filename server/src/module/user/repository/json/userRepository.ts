@@ -13,13 +13,13 @@ export class UserRepository extends AbstractUserRepository {
     this.jwt = jwt
   }
 
-  async getByID(id: string): Promise<User> {
+  async getByID(id: string): Promise<User | Error> {
     const users = this.getData()
 
     const user = users.find((tmpUser: User) => tmpUser.id === id)
 
     if (!user) {
-      throw new UserNotFoundError()
+      return new UserNotFoundError()
     }
 
     return new User(user)

@@ -10,9 +10,9 @@ export class AbstractCardRepository {
     }
   }
 
-  async getCardsByUser(userId: string): Promise<Card[]> {
+  async getCardsByUser(userId: string): Promise<Card[] | Error> {
     if (!userId) {
-      throw new CardUserIdNotDefinedError()
+      return new CardUserIdNotDefinedError()
     }
 
     const card = await this.getAll().then(cards => {
@@ -20,7 +20,7 @@ export class AbstractCardRepository {
     })
 
     if (!card) {
-      throw new CardNotFoundError()
+      return new CardNotFoundError()
     }
 
     return card

@@ -13,12 +13,12 @@ export class CardRepository extends AbstractCardRepository {
     this.jwt = jwt
   }
 
-  async getCardsByUser(userId: string): Promise<Card[]> {
+  async getCardsByUser(userId: string): Promise<Card[] | Error> {
     const cards = this.getData()
 
     const userCards = cards.filter(card => card.userId === userId)
     if (!userCards) {
-      throw new CardNotFoundError(`Cards for user ${userId} not found`)
+      return new CardNotFoundError(`Cards for user ${userId} not found`)
     }
 
     return userCards.map((card: Card) => new Card(card))

@@ -18,6 +18,7 @@ export type Card = {
 
 export type CardsStore = {
   cards: Card[]
+  // eslint-disable-next-line no-unused-vars
   setCards: (cards: Card[]) => void
 }
 

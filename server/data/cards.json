@@ -83,5 +83,77 @@
     "flag": "https://upload.wikimedia.org/wikipedia/commons/8/89/Bandera_de_Espa%C3%B1a.svg",
     "country": "España",
     "plan": "14 dias, 20GB"
+  },
+  {
+    "id": "8",
+    "userId": "1",
+    "status": "Expired",
+    "dateStart": "01/01/2023",
+    "dateEnd": "04/01/2023",
+    "comsuption": null,
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/2/21/Flag_of_Colombia.svg",
+    "country": "Colombia",
+    "plan": "7 dias, 5GB"
+  },
+  {
+    "id": "9",
+    "userId": "1",
+    "status": "Expired",
+    "dateStart": "02/01/2023",
+    "dateEnd": "02/01/2023",
+    "comsuption": null,
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Flag_of_Peru_%28state%29.svg/800px-Flag_of_Peru_%28state%29.svg.png",
+    "country": "Peru",
+    "plan": "10 dias, 8GB"
+  },
+  {
+    "id": "10",
+    "userId": "1",
+    "status": "Pending",
+    "dateStart": "01/01/2024",
+    "dateEnd": null,
+    "comsuption": {
+      "totalComsumption": 2106378
+    },
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/8/89/Bandera_de_Espa%C3%B1a.svg",
+    "country": "España",
+    "plan": "3 dias, 3GB"
+  },
+  {
+    "id": "11",
+    "userId": "2",
+    "status": "Active",
+    "dateStart": "06/10/2023",
+    "dateEnd": "16/10/2023",
+    "comsuption": {
+      "totalComsumption": 1127884.8
+    },
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/2/21/Flag_of_Colombia.svg",
+    "country": "Colombia",
+    "plan": "5 dias, 6GB"
+  },
+  {
+    "id": "12",
+    "userId": "2",
+    "status": "Expired",
+    "dateStart": "02/01/2023",
+    "dateEnd": "02/01/2023",
+    "comsuption": null,
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/8/89/Bandera_de_Espa%C3%B1a.svg",
+    "country": "España",
+    "plan": "30 dias, 25GB"
+  },
+  {
+    "id": "13",
+    "userId": "2",
+    "status": "Pending",
+    "dateStart": "01/01/2024",
+    "dateEnd": null,
+    "comsuption": {
+      "totalComsumption": 3984582.4
+    },
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Flag_of_Peru_%28state%29.svg/800px-Flag_of_Peru_%28state%29.svg.png",
+    "country": "Peru",
+    "plan": "15 dias, 18GB"
   }
 ]

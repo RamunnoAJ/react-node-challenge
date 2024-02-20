@@ -7,6 +7,7 @@ import { toast } from 'react-toastify'
 
 export default function LoginForm() {
   const [isLoading, setIsLoading] = React.useState(false)
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setIsLoading(true)

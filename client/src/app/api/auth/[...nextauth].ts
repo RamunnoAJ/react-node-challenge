@@ -46,10 +46,10 @@ export const authOptions = {
     signIn: '/login',
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: any) {
       return { ...token, ...user }
     },
-    async session({ session, token }) {
+    async session({ session, token }: any) {
       return { ...session, ...token }
     },
   },

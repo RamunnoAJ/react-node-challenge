@@ -1,7 +1,7 @@
 import LoginForm from '@/components/Login/Form'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '../api/auth/[...nextauth]/route'
 import { redirect } from 'next/navigation'
+import { authOptions } from '../api/auth/[...nextauth]'
 
 export default async function LoginPage({
   searchParams,

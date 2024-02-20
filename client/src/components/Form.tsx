@@ -3,7 +3,9 @@ import React from 'react'
 type Props = {
   className?: string
   children: React.ReactNode
+  // eslint-disable-next-line no-unused-vars
   onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void
+  // eslint-disable-next-line no-unused-vars
   onChange?: (e: React.FormEvent<HTMLFormElement>) => void
 }
 
